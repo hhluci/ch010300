@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+         http://www.springframework.org/schema/aop 
+         http://www.springframework.org/schema/aop/spring-aop.xsd">
+	<!-- 配置service -->
+	<bean id="customerService"
+		class="com.bee.sample.service.impl.CustomerServiceImpl"></bean>
+<!-- 基于xml的aop配置 -->
+<!-- 把通知类交给spring来管理 -->
+	<bean id="logger" class="com.bee.sample.util.Logger"></bean>
+	<!-- 导入AOP名称空间，使用<aop:config>开始aop配置 -->
+	<aop:config>
+	<!-- 使用aop aspect配置切面，id给切面一个唯一标识，ref用于通知bean的id -->
+		<aop:aspect id="logAdvice" ref="logger">
+		<!-- 配置通知的类型，指定增强的方法何时执行，method用于指定增强的方法，point用于指定切入点表达式
+		表达式：访问修饰符 返回类型 包.包...类名.方法名(参数列表) -->
+			<aop:after method="printLog"
+				pointcut="execution(public void com.bee.sample.service.impl.CustomerServiceImpl.saveCustomer())" />
+		</aop:aspect>
+	</aop:config>
+</beans>
